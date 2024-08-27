@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
-	"filespackage/filemaneger"
+	"filespackage/file_manager"
 	"fmt"
 	"net/http"
 	"os"
@@ -15,18 +15,38 @@ import (
 )
 
 func handleFSRequest(w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now() // Записываем текущее время для измерения времени выполнения запроса
-	dst := r.URL.Query().Get("dst") // Получаем путь назначения из URL-запроса
+	startTime := time.Now()           // Записываем текущее время для измерения времени выполнения запроса
+	dst := r.URL.Query().Get("dst")   // Получаем путь назначения из URL-запроса
 	sort := r.URL.Query().Get("sort") // Получаем флаг сортировки из URL-запроса
 
-	entryfiles, err := filemaneger.PrintFileDetails(dst)// Вызываем функцию для получения  файлов и директорий
-	if err != nil { //Обработка ошибки
-		http.Error(w, fmt.Sprintf("ошибка при формировании списка файлов: %v", err), http.StatusInternalServerError)
-		return
+	entryfiles, err := file_manager.PrintFileDetails(dst) // Вызываем функцию для получения  файлов и директорий
+	if err != nil {
+		response := file_manager.Response{
+			Status: 500,
+			Error:  fmt.Sprintf("ошибка при формировании списка файлов: %v", err),
+			Data:   "",
+		}
+		jsonData, err := json.MarshalIndent(response, "", "  ")
+		if err != nil {
+			http.Error(w, fmt.Sprintf("ошибка при форматировании JSON: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
+		endTime := time.Now()
+		duration := endTime.Sub(startTime)
+		fmt.Printf("Время выполнения запроса: %v\n", duration)
 	}
-	filemaneger.SortFileEntry(entryfiles, sort) // Вызываем функцию сортировки файловых записей
-	filemaneger.FormatFileEntries(entryfiles) // Вызываем функцию форматирования размеров файловых записей
-	jsonData, err := json.MarshalIndent(entryfiles, "", "  ")
+
+	file_manager.SortFileEntry(entryfiles, sort) // Вызываем функцию сортировки файловых записей
+	file_manager.FormatFileEntries(entryfiles)   // Вызываем функцию форматирования размеров файловых записей
+	response := file_manager.Response{
+		Status: 200,
+		Error:  "",
+		Data:   entryfiles,
+	}
+	jsonData, err := json.MarshalIndent(response, "", "  ")
 	if err != nil {
 		http.Error(w, fmt.Sprintf("ошибка при форматировании JSON: %v", err), http.StatusInternalServerError)
 		return
@@ -38,6 +58,7 @@ func handleFSRequest(w http.ResponseWriter, r *http.Request) {
 	duration := endTime.Sub(startTime)
 	fmt.Printf("Время выполнения запроса: %v\n", duration)
 }
+
 func StartServ() {
 
 	// Загружаем переменные из .env файла
@@ -55,13 +76,9 @@ func StartServ() {
 	http.HandleFunc("/fs", handleFSRequest)
 	fmt.Printf("Сервер запущен на порту %s\n", port)
 	// Закрытие сервера
-	Closer := make(chan os.Signal, 1) // Буфер размером 1, чтобы отправитель не блокировался
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTSTP)
 
-	go func() {
-		<-Closer // Ожидание сигнала
-		cancel() // Отмена контекста
-	}()
+	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTSTP)
+
 	// Здесь логика сервера
 	httpServer := &http.Server{
 		Addr: ":" + port,
@@ -73,8 +90,7 @@ func StartServ() {
 	}()
 	// Ожидание завершения работы сервера
 	<-ctx.Done()
-	// Закрытие канала Closer
-	close(Closer)
+
 	// Корректное завершение работы HTTP сервера
 	if err := httpServer.Shutdown(context.Background()); err != nil { // Обработка ошибки
 		fmt.Printf("HTTP server Shutdown(): %v", err)

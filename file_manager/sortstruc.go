@@ -1,27 +1,33 @@
-package filemaneger
+package file_manager
 
 import (
 	"sort"
 )
 
-// Структура для хранения информации о файле или директории
+// FileEntry - Структура для хранения информации о файле или директории
 type FileEntry struct {
-	FType   string
-	FSize   float64
-	FName   string
-	TypSize string
+	FType    string  `json:"f_type"` //
+	FSize    float64 `json:"f_size"` //
+	FName    string  `json:"f_name"` //
+	TypeSize string  `json:"f_typesize"` //
+}
+//Response - Структура ответов для обработки ошибок
+type Response struct {
+	Status int    `json:"f_status"` //
+	Error  string `json:"f_error"`//
+	Data   any    `json:"f_data"`//
 }
 
-// Функция форматирования массива FileEntry с использованием функции formatSize
+// FormatFileEntries - Функция форматирования массива FileEntry с использованием функции formatSize
 func FormatFileEntries(dataFiles []FileEntry) {
 	for i := range dataFiles {
-		typ, razm := formatSize(dataFiles[i].FSize)
-		dataFiles[i].TypSize = typ
-		dataFiles[i].FSize = razm
+		types, size := formatSize(dataFiles[i].FSize)
+		dataFiles[i].TypeSize = types
+		dataFiles[i].FSize = size
 	}
 }
 
-// Форматирование размера
+// formatSize - Функция Форматирование размера
 func formatSize(bytes float64) (string, float64) {
 	const b float64 = 1000
 	// Сортируем по убыванию размеров
@@ -40,7 +46,7 @@ func formatSize(bytes float64) (string, float64) {
 const Asc = "asc" // Создание констант
 const Desc = "desc"
 
-// Функция сортировки массива FileEntry по размеру файла
+// SortFileEntry - Функция сортировки массива FileEntry по размеру файла
 func SortFileEntry(dataFiles []FileEntry, SortFlag string) {
 	// Определяем направление сортировки на основе параметра ask
 	if SortFlag == Asc {

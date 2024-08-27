@@ -9,31 +9,34 @@
 <body>
     <div class="container"> <!--#конт блочн для стилизации -->
         <div class="header">
-            <button class="back-button">Назад</button>
-            <button class="sort-button">Сортировка</button>
+            <header class="header">
+                <h1>Путь к файлу: /path/to/your/file</h1>
+                   
+                    <button class="back-button">Назад</button>
+                    <button class="sort-button">Сортировка</button>
         </div>
-         <ul class="item-list"> <!--ненум список -->
-            <li class="item"> <!--#Присв номер кажд эл-ту списка-->
-                <span class="type">Тип A</span> <!--#строчный конт-->
-                <span class="name">Имя 1</span>
-                <span class="size">Размер 10</span>
-            </li>
-            <li class="item">
-                <span class="type">Тип B</span>
-                <span class="name">Имя 2</span>
-                <span class="size">Размер 20</span>
-            </li>
-            <li class="item">
-                <span class="type">Тип A</span>
-                <span class="name">Имя 3</span>
-                <span class="size">Размер 15</span>
-            </li>
-            <li class="item">
-                <span class="type">Тип C</span>
-                <span class="name">Имя 4</span>
-                <span class="size">Размер 25</span>
-            </li>
-        </ul>
+        
+        <table class="item-list">
+            <thead>
+                <tr>
+                    <th>Тип</th>
+                    <th>Имя</th>
+                    <th>Размер</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="itemdir">
+                    <td><span class="type">Директория</span></td>
+                    <td><span class="name">1</span></td>
+                    <td><span class="size">10</span></td>
+                </tr>
+                <tr class="itemfile">
+                    <td><span class="type">Файл</span></td>
+                    <td><span class="name">2</span></td>
+                    <td><span class="size">0</span></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
