@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список структур</title>
     <link rel="stylesheet" href="styl.css">
+    <script src="script.js"></script> 
 </head>
 <body>
+    
     <div class="container"> <!--#конт блочн для стилизации -->
         <div class="header">
-            <header class="header">
-                <h1>Путь к файлу: /path/to/your/file</h1>
+            <h1 id="4"></h1>
                    
-                    <button class="back-button">Назад</button>
-                    <button class="sort-button">Сортировка</button>
+                    <button id="2" class="back-button">Назад</button>
+                    <button id="3" class="sort-button">Сортировка</button>
         </div>
         
         <table class="item-list">
@@ -22,20 +23,10 @@
                     <th>Тип</th>
                     <th>Имя</th>
                     <th>Размер</th>
+                    <th>ЕдИзмерения</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr class="itemdir">
-                    <td><span class="type">Директория</span></td>
-                    <td><span class="name">1</span></td>
-                    <td><span class="size">10</span></td>
-                </tr>
-                <tr class="itemfile">
-                    <td><span class="type">Файл</span></td>
-                    <td><span class="name">2</span></td>
-                    <td><span class="size">0</span></td>
-                </tr>
-            </tbody>
+            <tbody id="file-list"></tbody>
         </table>
     </div>
 </body>

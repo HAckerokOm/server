@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-// Функция для формирования списка файлов и поддиректорий
+// PrintFileDetails - Функция для формирования списка файлов и поддиректорий
 func PrintFileDetails(mdir string) ([]FileEntry, error) {
 	files, err := os.ReadDir(mdir)
 	if err != nil { // Обработка ошибки
