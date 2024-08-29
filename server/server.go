@@ -14,6 +14,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+const DEFAULT_ROOT string = "/"
+
 // handleFSRequest-Функция обработки  http запроса
 func handleFSRequest(w http.ResponseWriter, r *http.Request) {
 	startTime := time.Now() // Записываем текущее время для измерения времени выполнения запроса
@@ -33,6 +35,11 @@ func handleFSRequest(w http.ResponseWriter, r *http.Request) {
 	}()
 	dst := r.URL.Query().Get("dst")   // Получаем путь назначения из URL-запроса
 	sort := r.URL.Query().Get("sort") // Получаем флаг сортировки из URL-запроса
+
+	defaultRoot := os.Getenv("DEFAULT_ROOT")
+	if defaultRoot == "" {
+		defaultRoot = DEFAULT_ROOT
+	}
 
 	entryfiles, err := file_manager.PrintFileDetails(dst) // Вызываем функцию для получения  файлов и директорий
 	if err != nil {                                       // Проверяем наличие ошибок при получении файловых записей
@@ -63,6 +70,12 @@ func StartServ() {
 	if port == "" {
 		fmt.Println("Отсутствует обязательная переменная окружения PORT")
 	}
+
+	defaultRoot := os.Getenv("DEFAULT_ROOT")
+	if defaultRoot == "" {
+		defaultRoot = DEFAULT_ROOT
+	}
+
 	http.Handle("/style/", http.StripPrefix("/style/", http.FileServer(http.Dir("./static/style"))))
 	http.Handle("/script/", http.StripPrefix("/script/", http.FileServer(http.Dir("./static/script"))))
 	http.HandleFunc("/", serveHTMLPage)
@@ -93,5 +106,5 @@ func StartServ() {
 // serveHTMLPage-функция для обработки HTTP-запросов на HTML страницу
 func serveHTMLPage(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./static/site.html")
-	
+
 }

@@ -1,9 +1,10 @@
 
 import {mask} from "./script.js"
 import {loader} from "./script.js"
-import {updateCurrentPath, curDir, changeCurDir}from './buttoms.js'
+import {updateCurrentPath, curDir, changeCurDir}from './buttons.js'
 
 let parDir; // Переменная для сохранения родительской директории
+
 //fetchFiles - Функция для получения файлов
 export function fetchFiles(sort) {
     loader.classList.add('loader')
@@ -36,6 +37,7 @@ export function displayFiles(files) {
             cell.innerHTML = `<span class="${key}">${file[key]}</span>`; // Формируем содержимое ячейки с применением стилей
             row.appendChild(cell);  // Добавляем ячейку в строку
         });
+
         // Создаем отдельную ячейку для размера и типа размера
         const sizeCell = document.createElement('td');
         sizeCell.className = 'size-cell';
@@ -61,7 +63,7 @@ export function displayFiles(files) {
             row.classList.add("itemdir")
             row.classList.add("directstyle")
             row.addEventListener('click', function() {
-                directoryTraversal(file.f_name)// Обработчик клика для перехода в поддиректорию
+                goSubDir(file.f_name)// Обработчик клика для перехода в поддиректорию
             
            
             });
@@ -71,8 +73,8 @@ export function displayFiles(files) {
 
     });
 }
-// directoryTraversal - Функция для перехода в поддиректорию
-function directoryTraversal(path){
+// goSubDir - Функция для перехода в поддиректорию
+function goSubDir(path){
     parDir = curDir; // Сохраняем текущий путь в переменную parDir
     changeCurDir(`${curDir}/${path}`); // Обновляем текущий путь, добавив указанный путь
     updateCurrentPath(); // Обновляем текущий путь в DOM
