@@ -6,9 +6,9 @@ module.exports = {
   mode: 'development', 
   entry: './static/tsscript/script.ts', // точка входа
   output: {
-    filename: 'bundle.[contenthash].js',  // имя выходного файла
-    path: path.resolve(__dirname, 'resource'), // путь для выходного файла
-    clean: true, // очищает папку 
+    filename: 'bundle.[contenthash].js',  // имя сбилженного файла джс
+    path: path.resolve(__dirname, 'resource'), // путь к папке билда
+    clean: true, // очистка папки
   },
   resolve: {
     extensions: ['.ts', '.js', 'css'], // обрабатываемые расширения
