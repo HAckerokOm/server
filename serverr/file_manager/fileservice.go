@@ -43,11 +43,12 @@ func getDir(file os.DirEntry, pathDirectory string, filesEntry []FileEntry, inde
 	defer wg.Done()
 	// Рекурсивный вызов для поддиректорий
 	directSum, err := calcSumDirect(fmt.Sprintf("%s/%s", pathDirectory, file.Name()))
-	size += directSum // Добавление размера директории
-	if err != nil {   // Обработка ошибки
+
+	if err != nil { // Обработка ошибки
 		fmt.Printf("Не удалось получить размер дирректории '%s': %v\n", file.Name(), err)
 		return
 	}
+	size += directSum       // Добавление размера директории
 	size += fileInfo.Size() // Добавление размера файла к общему размеру
 	// Создание нового элемента FileEntry с информацией о директории
 	filesEntry[index] = FileEntry{FName: file.Name(), FSize: float64(size), FType: "Директория"}
@@ -71,8 +72,12 @@ func calcSumDirect(pathDirectory string) (int64, error) {
 			sum += dirSum // Добавление размера директории
 		} else {
 
-			info, _ := file.Info() // Получение информации о файле
-			sum += info.Size()     // Размер добавляется к общей сумме
+			info, err := file.Info() // Получение информации о файле
+			if err != nil {          //Обработка ошибки
+				fmt.Printf("Не удалось получить размер директории '%s': %v\n", file.Name(), err)
+				continue
+			}
+			sum += info.Size() // Размер добавляется к общей сумме
 		}
 	}
 	return sum, nil

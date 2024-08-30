@@ -1,54 +1,36 @@
 
-import {mask} from "./script.js"
-import {loader} from "./script.js"
+import {mask,loader} from "./script.js"
+import {fetchFiles} from "./fetchh.js"
 import {updateCurrentPath, curDir, changeCurDir}from './buttons.js'
 
-let parDir; // Переменная для сохранения родительской директории
+export let parDir; // Переменная для сохранения родительской директории
 
-//fetchFiles - Функция для получения файлов
-export function fetchFiles(sort) {
-    loader.classList.add('loader')
-    mask.classList.add('mask')
-   
-    return fetch(`http://localhost:9999/fs?dst=${curDir}&sort=${sort}`) // Создаем URL для запроса к API
-        .then(response => { // Проверяем, является ли ответ успешным (код состояния 200-299)
-            if (!response.ok) { 
-                // Если ответ не успешный, выбрасываем ошибку с информацией о статусе
-                throw new Error(`HTTP error! status: ${response.status}`); 
-            }
-            return response.json();  // Если ответ успешный, преобразуем его в JSON
-        }).then(files => { // Вызываем функцию fetchFiles с переданным параметром сортировки
-            displayFiles(files.f_data);// Отображаем отсортированные файлы в таблице
-        }).catch(error => { //обрабатываем ошибки
-            console.error('Ошибка при получении данных:', error);
-        });
-}
+
 // displayFiles - Функция отображения файлов в таблице
 export function displayFiles(files) {
-    const tableBody = document.querySelector('.item-list tbody');// Находим тело таблицы с классом .item-list tbody
-    tableBody.innerHTML = ''; // Очищаем содержимое тела таблицы
+    const tableBody = document.querySelector('.item-list tbody');  // Находим тело таблицы с классом .item-list tbody
+    tableBody.innerHTML = '';
     
-    files.forEach(file => {// проходимся по списку файлов
+    files.forEach(file => { // Проходимся по списку файлов
         const row = document.createElement('tr'); // Создаем новую строку таблицы
-        row.classList.add(file.f_type === 'directory'? 'itemdir' : 'itemfile');// Добавляем класс itemdir, если это директория, иначе itemfile
+        row.classList.add(file.f_type === 'directory' ? 'itemdir' : 'itemfile'); // Добавляем класс itemdir, если это директория, иначе itemfile
 
-        ['f_type', 'f_name'].forEach(key => {  // Цикл для создания ячеек в строке
-            const cell = document.createElement('td');// Создаем новый элемент ячейки
-            cell.innerHTML = `<span class="${key}">${file[key]}</span>`; // Формируем содержимое ячейки с применением стилей
-            row.appendChild(cell);  // Добавляем ячейку в строку
+        ['f_type', 'f_name'].forEach(key => { // Создаем ячейки для имени файла и типа файла
+            const cell = document.createElement('td');
+            cell.innerHTML = `<span class="${key}">${file[key]}</span>`;
+            row.appendChild(cell);
         });
 
-        // Создаем отдельную ячейку для размера и типа размера
+        // Создаем ячейку для размера файла
         const sizeCell = document.createElement('td');
         sizeCell.className = 'size-cell';
 
-        // Добавляем текст размера
+        // Создаем элементы для отображения размера и типа размера файла
         const sizeSpan = document.createElement('span');
-        sizeSpan.textContent = `${file.f_size}`;
+        sizeSpan.textContent = `${file.f_size.toFixed(1)} `; // используем toFixed для округления после запятой
         sizeSpan.className = 'f_size';
         sizeCell.appendChild(sizeSpan);
 
-        // Добавляем текст типа размера
         const typeSpan = document.createElement('span');
         typeSpan.textContent = `${file.f_typesize}`;
         typeSpan.className = 'f_typesize';
@@ -56,21 +38,19 @@ export function displayFiles(files) {
 
         row.appendChild(sizeCell);
         
-        tableBody.appendChild(row);// Добавляем строку в тело таблицы
+        tableBody.appendChild(row);
 
-        if (file.f_type == "Директория") { //если это директория
-             // Добавляем эффект наведения и обработчик клика для директорий
-            row.classList.add("itemdir")
-            row.classList.add("directstyle")
+        // Добавляем обработчик клика для директорий
+        if (file.f_type == "Директория") {
+            row.classList.add("itemdir");
+            row.classList.add("directstyle");
             row.addEventListener('click', function() {
-                goSubDir(file.f_name)// Обработчик клика для перехода в поддиректорию
-            
-           
+                goSubDir(file.f_name); // Вызываем функцию перехода в поддиректорию при клике на директорию
             });
-        }loader.classList.remove("loader")
-        mask.classList.remove("mask") 
-        
-
+        }
+         // Убираем маску и загрузочный индикатор после отображения файлов
+        loader.classList.remove("loader");
+        mask.classList.remove("mask"); 
     });
 }
 // goSubDir - Функция для перехода в поддиректорию
@@ -78,5 +58,5 @@ function goSubDir(path){
     parDir = curDir; // Сохраняем текущий путь в переменную parDir
     changeCurDir(`${curDir}/${path}`); // Обновляем текущий путь, добавив указанный путь
     updateCurrentPath(); // Обновляем текущий путь в DOM
-    fetchFiles()
+    fetchFiles() // Вызываем fetchFiles для обновления списка файлов в новой директории
 }

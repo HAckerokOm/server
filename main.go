@@ -1,7 +1,7 @@
 package main
 
 import (
-	"filespackage/server"
+	"filespackage/serverr/server"
 )
 
 func main() {
