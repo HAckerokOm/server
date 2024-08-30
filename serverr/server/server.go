@@ -60,11 +60,6 @@ func handleFSRequest(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// serveHTMLPage - Функция для обслуживания HTML страниц
-func serveHTMLPage(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./static/site.html") // Отправляем HTML страницу
-}
-
 // StartServ - Функция для запуска сервера
 func StartServ() {
 	err := godotenv.Load() // Загружаем переменные окружения из .env файла
@@ -77,12 +72,9 @@ func StartServ() {
 		fmt.Println("Отсутствует обязательная переменная окружения PORT")
 	}
 
-	// Настроиваем маршруты для  файлов
-	http.Handle("/style/", http.StripPrefix("/style/", http.FileServer(http.Dir("./static/style"))))
-	http.Handle("/script/", http.StripPrefix("/script/", http.FileServer(http.Dir("./static/script"))))
-
+	fs := http.FileServer(http.Dir("./resource"))
 	// Определяем обработчики HTTP запросов
-	http.HandleFunc("/", serveHTMLPage)
+	http.Handle("/", fs)
 	http.HandleFunc("/fs", handleFSRequest)
 
 	// Выводим сообщение о запуске сервера
