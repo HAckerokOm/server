@@ -2,6 +2,7 @@ import { mask, loader } from "./script";
 import { fetchFiles } from "./fetchh";
 import { updateCurrentPath, curDir, changeCurDir } from './buttons';
 
+
 export let parDir: string | null = null; // Переменная для сохранения родительской директории
 
 // displayFiles - Функция отображения файлов в таблице
@@ -56,7 +57,11 @@ export function displayFiles(files: any[]): void {
 // goSubDir - Функция для перехода в поддиректорию
 function goSubDir(path: string): void {
     parDir = curDir; // Сохраняем текущий путь в переменную parDir
-    changeCurDir(`${curDir}/${path}`); // Обновляем текущий путь, добавив указанный путь
+    if (curDir === "/"){
+        changeCurDir(`/${path}`)
+    }else{
+        changeCurDir(`${curDir}/${path}`); // Обновляем текущий путь, добавив указанный путь
+    }
     updateCurrentPath(); // Обновляем текущий путь в DOM
     fetchFiles(""); // Вызываем fetchFiles для обновления списка файлов в новой директории
 }

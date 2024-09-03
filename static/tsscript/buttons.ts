@@ -4,7 +4,7 @@ import { fetchFiles } from "./fetchh";
 let rootDir: string | null = null;
 
 // Определяем текущую директорию
-export let curDir: string = "/home/yaroslav/work"; // Корневая директория
+export let curDir: string = ""; // Корневая директория
 
 const asc: string = "asc"; // Константа для сортировки по возрастанию
 const desc: string = "desc"; // Константа для сортировки по убыванию
@@ -13,6 +13,8 @@ const desc: string = "desc"; // Константа для сортировки �
 export function WriteRoot(defaultRoot: string) {
     // Записываем дефолтный путь в rootDir
     rootDir = defaultRoot;
+    curDir = rootDir;
+    fetchFiles("")
     console.log(`Дефолтный путь установлен: ${rootDir}`);
 }
 
@@ -64,3 +66,4 @@ export function updateCurrentPath() {
     // Получаем элемент с id="Path" и устанавливаем его текстовое содержимое
     document.getElementById("Path")!.textContent = `Путь: ${curDir}`;
 }
+

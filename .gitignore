@@ -1,3 +1,4 @@
 *.bin
 *.exe
 /resource
+/package-lock.json

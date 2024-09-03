@@ -20,6 +20,7 @@ type Response struct {
 	Root   string `json:"f_root"`
 }
 
+
 // FormatFileEntries - Функция форматирования массива FileEntry с использованием функции formatSize
 func FormatFileEntries(dataFiles []FileEntry) {
 	for i := range dataFiles {

@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Вызываем функцию SortBut()
     buttons.SortBut();
 
+    // buttons.StatsButton()
     // Вызываем функцию updateCurrentPath() для обновления текущего пути
     buttons.updateCurrentPath();
 

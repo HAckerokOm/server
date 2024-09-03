@@ -18,8 +18,12 @@ export function fetchFiles(sort: string): Promise<void> {
             console.log("Received files:", files);
 
             if (files.f_status === 200) {
-                displayFiles(files.f_data); // Отображаем отсортированные файлы в таблице
-                WriteRoot(files.f_root);
+                if (files.f_data == " "){
+                    WriteRoot(files.f_root)
+                }else{
+                    displayFiles(files.f_data); // Отображаем отсортированные файлы в таблице
+                }
+                
             } else { // Обрабатываем ошибки
                 alert('Указан неверный путь: ' + files.f_error);
             }
