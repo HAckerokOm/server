@@ -31,7 +31,7 @@ module.exports = {
       template: './static/style/index.html', // шаблон HTML
     }),
     new MiniCssExtractPlugin({
-        filename: 'styl.css', // имя выходного файла для CSS
+        filename: 'style.css', // имя выходного файла для CSS
       }),
   ],
 };

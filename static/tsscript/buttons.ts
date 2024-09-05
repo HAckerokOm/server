@@ -26,8 +26,10 @@ export function SortBut() {
 
 //Функция для выбора сортировки файлов
 function SortPrompt() {
-    const sort = prompt('Введите параметр сортировки (asc или desc):', ''); // Показываем пользователю окно ввода для сортировки
-    if (sort === asc || sort === desc) { // Проверяем, не пустая ли строка ввода
+    // Показываем пользователю окно ввода для сортировки
+    const sort = prompt('Введите параметр сортировки (asc или desc):', ''); 
+    // Проверяем, не пустая ли строка ввода
+    if (sort === asc || sort === desc) { 
         fetchFiles(sort)
     } else {
         alert("Вы ввели неправильное значение")
@@ -36,24 +38,30 @@ function SortPrompt() {
 
 // BackBut - функция кнопки назад
 export function BackBut(){
-    const backButton = document.getElementById("backbut")!; // Получаем элемент с id="backbut"
-    backButton.addEventListener('click', returnToPreviousDirectory); // При нажатии кнопки вызывается функция returnToPreviousDirectory
+    // Получаем элемент с id="backbut"
+    const backButton = document.getElementById("backbut")!; 
+    // При нажатии кнопки вызывается функция returnToPreviousDirectory
+    backButton.addEventListener('click', returnToPreviousDirectory); 
 }
 
 // returnToPreviousDirectory - Функция возврата в предыдущую директорию
 function returnToPreviousDirectory() {
-    if(curDir === rootDir) { // Проверяем, равен ли текущий путь корневой директории
-        
-        alert("Вы в корневой дирректории"); // Если да, показываем сообщение и прекращаем выполнение функции
+    // Проверяем, равен ли текущий путь корневой директории
+    if(curDir === rootDir) { 
+        // Если да, показываем сообщение и прекращаем выполнение функции
+        alert("Вы в корневой дирректории"); 
         return;
     }
-    curDir = curDir.split('/').slice(0, -1).join('/'); // Разделяем текущий путь на компоненты
+    // Разделяем текущий путь на компоненты
+    curDir = curDir.split('/').slice(0, -1).join('/'); 
     // Если результат пустой, устанавливаем корневую директорию
     if (curDir === "") {
         curDir = "/";
     }
-    updateCurrentPath(); // Обновляем текущий путь в DOM
-    fetchFiles(""); // Вызываем функцию fetchFiles для обновления списка файлов
+    // Обновляем текущий путь в DOM
+    updateCurrentPath(); 
+    // Вызываем функцию fetchFiles для обновления списка файлов
+    fetchFiles(""); 
 }
 
 // changeCurDir - Функция изменения текущей директории

@@ -9,56 +9,75 @@ import (
 // PrintFileDetails - Функция для формирования списка файлов и поддиректорий
 func PrintFileDetails(mdir string) ([]FileEntry, error) {
 	files, err := os.ReadDir(mdir)
+
 	if err != nil { // Обработка ошибки
 		return nil, fmt.Errorf("не удалось прочитать '%s'", err)
 	}
-	var sortedEntries []FileEntry = make([]FileEntry, len(files)) // Создание массива
-	var wg sync.WaitGroup                                         //Инициализация WaitGroup
-	for i, file := range files {                                  //Цикл для перебора файлов
-		info, err := file.Info() // получения информации о файле
-		if err != nil {          // Обработка ошибки
+	// Создание массива
+	var sortedEntries []FileEntry = make([]FileEntry, len(files)) 
+	//Инициализация WaitGroup
+	var wg sync.WaitGroup   
+	//Цикл для перебора файлов                                      
+	for i, file := range files {  
+		// получения информации о файле                                
+		info, err := file.Info() 
+		// Обработка ошибки
+		if err != nil {          
 			fmt.Printf("Не удалось получить информацию о файле '%s': %v\n", file.Name(), err)
 			continue
 		}
-		isDirectory := info.IsDir() //Проверка директории
-		if isDirectory {            //Обработка директорий
-			wg.Add(1) // Запускается новая горутина с функцией - GetDir
+		//Проверка директории
+		isDirectory := info.IsDir() 
+		 //Обработка директорий
+		if isDirectory {    
+			// Запускается новая горутина с функцией - GetDir       
+			wg.Add(1) 
 			go getDir(file, mdir, sortedEntries, i, &wg)
 		} else {
-			sortedEntries[i] = FileEntry{ // Обработка файлов
+			// Обработка файлов
+			sortedEntries[i] = FileEntry{ 
 				FName: file.Name(),
 				FSize: float64(info.Size()),
 				FType: "Файл",
 			}
 		}
 	}
-	wg.Wait()                 //Ожидается завершение всех горутин
-	return sortedEntries, nil //Возвращаются отсортированный массив и нил без ошибок
+	//Ожидается завершение всех горутин
+	wg.Wait()   
+	//Возвращаются отсортированный массив и нил без ошибок              
+	return sortedEntries, nil 
 }
 
 // GetDir - Функция для получения информации о поддиректории
 func getDir(file os.DirEntry, pathDirectory string, filesEntry []FileEntry, index int, wg *sync.WaitGroup) {
-	var size int64             // Инициализация переменной для хранения размера
-	fileInfo, _ := file.Info() //Получение информации о файле
+	// Инициализация переменной для хранения размера
+	var size int64    
+	//Получение информации о файле         
+	fileInfo, _ := file.Info() 
 	defer wg.Done()
 	// Рекурсивный вызов для поддиректорий
 	directSum, err := calcSumDirect(fmt.Sprintf("%s/%s", pathDirectory, file.Name()))
-
-	if err != nil { // Обработка ошибки
+	// Обработка ошибки
+	if err != nil { 
 		fmt.Printf("Не удалось получить размер дирректории '%s': %v\n", file.Name(), err)
 		return
 	}
-	size += directSum       // Добавление размера директории
-	size += fileInfo.Size() // Добавление размера файла к общему размеру
+	 // Добавление размера директории
+	size += directSum  
+	// Добавление размера файла к общему размеру    
+	size += fileInfo.Size() 
 	// Создание нового элемента FileEntry с информацией о директории
 	filesEntry[index] = FileEntry{FName: file.Name(), FSize: float64(size), FType: "Директория"}
 }
 
 // calcSumDirect-Функция расчета суммы размеров файлов и поддиректорий
 func calcSumDirect(pathDirectory string) (int64, error) {
-	var sum int64                           // Инициализация переменной для накопления суммы размеров
-	files, err := os.ReadDir(pathDirectory) // Чтение списка файлов и поддиректорий в директории
-	if err != nil {                         // Обработка ошибки
+	// Инициализация переменной для накопления суммы размеров
+	var sum int64         
+	// Чтение списка файлов и поддиректорий в директории                  
+	files, err := os.ReadDir(pathDirectory) 
+	// Обработка ошибки
+	if err != nil {                         
 		return 0, err
 	}
 	for _, file := range files {
@@ -71,13 +90,15 @@ func calcSumDirect(pathDirectory string) (int64, error) {
 			}
 			sum += dirSum // Добавление размера директории
 		} else {
-
-			info, err := file.Info() // Получение информации о файле
-			if err != nil {          //Обработка ошибки
+			// Получение информации о файле
+			info, err := file.Info() 
+			 //Обработка ошибки
+			if err != nil {         
 				fmt.Printf("Не удалось получить размер директории '%s': %v\n", file.Name(), err)
 				continue
 			}
-			sum += info.Size() // Размер добавляется к общей сумме
+			// Размер добавляется к общей сумме
+			sum += info.Size() 
 		}
 	}
 	return sum, nil

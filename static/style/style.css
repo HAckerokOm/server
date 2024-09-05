@@ -41,6 +41,33 @@ body {
     border-color: #2fcde2;
     background-color:  #fdfdfd;
 }
+/* Стили для кнопки сортировки */
+.sort-button:hover {
+    background-color:  #e61a1a;
+}
+.sort-button {
+    position: absolute;
+    top: 110px;
+    left: 10px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border-color: #2fcde2;
+    
+}
+
+/* Стили для кнопки статистика */
+.stats-button:hover{
+    background-color:  #e61a1a;
+}
+.stats-button {
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border-color: #2fcde2;
+    background-color:  #fdfdfd;
+}
 /* маска и лоадер */
 .mask{
     width:100%;
@@ -74,17 +101,6 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Стили для кнопки сортировки */
-.sort-button:hover {
-    background-color:  #e61a1a;
-}
-.sort-button {
-    position: relative;
-    padding: 8px 16px;
-    border-radius: 6px;
-    border-color: #2fcde2;
-    
-}
 
 /* Стили для таблицы */
 .item-list {

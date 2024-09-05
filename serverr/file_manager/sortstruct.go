@@ -3,6 +3,10 @@ package file_manager
 import (
 	"sort"
 )
+// Создание констант
+const asc = "asc"   // конст сортировки по возрастанию
+const desc = "desc" // конст сортировки по убыванию
+const b float64 = 1000 // конст для форматир размера
 
 // FileEntry - Структура для хранения информации о файле или директории
 type FileEntry struct {
@@ -20,7 +24,6 @@ type Response struct {
 	Root   string `json:"f_root"`
 }
 
-
 // FormatFileEntries - Функция форматирования массива FileEntry с использованием функции formatSize
 func FormatFileEntries(dataFiles []FileEntry) {
 	for i := range dataFiles {
@@ -32,7 +35,7 @@ func FormatFileEntries(dataFiles []FileEntry) {
 
 // formatSize - Функция Форматирование размера
 func formatSize(bytes float64) (string, float64) {
-	const b float64 = 1000
+	
 	// Сортируем по убыванию размеров
 	switch {
 	case bytes >= b*b*b: // Если размер в гигабайтах или больше
@@ -46,14 +49,12 @@ func formatSize(bytes float64) (string, float64) {
 	}
 }
 
-// Создание констант
-const Asc = "asc"   // конст сортировки по возрастанию
-const Desc = "desc" // конст сортировки по убыванию
+
 
 // SortFileEntry - Функция сортировки массива FileEntry по размеру файла
-func SortFileEntry(dataFiles []FileEntry, SortFlag string) {
+func SortFileEntry(dataFiles []FileEntry, sortFlag string) {
 	// Определяем направление сортировки на основе параметра ask
-	if SortFlag == Asc {
+	if sortFlag == asc {
 		// Сортировка по возрастанию размера
 		sort.Slice(dataFiles, func(i, j int) bool {
 			return dataFiles[i].FSize < dataFiles[j].FSize

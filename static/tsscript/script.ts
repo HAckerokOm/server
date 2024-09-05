@@ -1,6 +1,6 @@
 import { fetchFiles } from "./fetchh";
 import * as buttons from './buttons';
-import "./../style/styl.css"
+import "./../style/style.css"
 
 export let mask: HTMLElement;
 export let loader: HTMLElement;

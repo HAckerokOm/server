@@ -11,11 +11,15 @@ export function displayFiles(files: any[]): void {
     
     tableBody!.innerHTML = '';
     
-    files.forEach(file => { // Проходимся по списку файлов
-        const row = document.createElement('tr'); // Создаем новую строку таблицы
-        row.classList.add(file.f_type === 'directory' ? 'itemdir' : 'itemfile'); // Добавляем класс itemdir, если это директория, иначе itemfile
+    // Проходимся по списку файлов
+    files.forEach(file => { 
+        // Создаем новую строку таблицы
+        const row = document.createElement('tr'); 
+        // Добавляем класс itemdir, если это директория, иначе itemfile
+        row.classList.add(file.f_type === 'directory' ? 'itemdir' : 'itemfile'); 
 
-        ['f_type', 'f_name'].forEach(key => { // Создаем ячейки для имени файла и типа файла
+        // Создаем ячейки для имени файла и типа файла
+        ['f_type', 'f_name'].forEach(key => { 
             const cell = document.createElement('td');
             cell.innerHTML = `<span class="${key}">${file[key]}</span>`;
             row.appendChild(cell);
@@ -27,7 +31,8 @@ export function displayFiles(files: any[]): void {
 
         // Создаем элементы для отображения размера и типа размера файла
         const sizeSpan = document.createElement('span');
-        sizeSpan.textContent = `${file.f_size.toFixed(1)} `; // используем toFixed для округления после запятой
+        // используем toFixed для округления после запятой
+        sizeSpan.textContent = `${file.f_size.toFixed(1)} `; 
         sizeSpan.className = 'f_size';
         sizeCell.appendChild(sizeSpan);
 
@@ -44,7 +49,8 @@ export function displayFiles(files: any[]): void {
         if (file.f_type === "Директория") {
             row.classList.add("itemdir");
             row.classList.add("directstyle");
-            row.addEventListener('click', function() { // Вызываем функцию перехода в поддиректорию при клике на директорию
+            // Вызываем функцию перехода в поддиректорию при клике на директорию
+            row.addEventListener('click', function() { 
                 goSubDir(file.f_name); 
             });
         }
@@ -56,12 +62,16 @@ export function displayFiles(files: any[]): void {
 
 // goSubDir - Функция для перехода в поддиректорию
 function goSubDir(path: string): void {
-    parDir = curDir; // Сохраняем текущий путь в переменную parDir
+    // Сохраняем текущий путь в переменную parDir
+    parDir = curDir; 
     if (curDir === "/"){
         changeCurDir(`/${path}`)
     }else{
-        changeCurDir(`${curDir}/${path}`); // Обновляем текущий путь, добавив указанный путь
+        // Обновляем текущий путь, добавив указанный путь
+        changeCurDir(`${curDir}/${path}`); 
     }
-    updateCurrentPath(); // Обновляем текущий путь в DOM
-    fetchFiles(""); // Вызываем fetchFiles для обновления списка файлов в новой директории
+    // Обновляем текущий путь в DOM
+    updateCurrentPath(); 
+    // Вызываем fetchFiles для обновления списка файлов в новой директории
+    fetchFiles(""); 
 }
